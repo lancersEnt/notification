@@ -7,6 +7,7 @@ import {
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { KafkaModule } from './kafka/kafka.module';
 import { DateTimeResolver } from 'graphql-scalars';
+import { PrismaService } from 'prisma/prisma.service';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { DateTimeResolver } from 'graphql-scalars';
     KafkaModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}
