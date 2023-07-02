@@ -8,9 +8,11 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { KafkaModule } from './kafka/kafka.module';
 import { DateTimeResolver } from 'graphql-scalars';
 import { PrismaService } from 'prisma/prisma.service';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
+    KafkaModule,
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       playground: false,
@@ -20,7 +22,7 @@ import { PrismaService } from 'prisma/prisma.service';
         DateTime: DateTimeResolver,
       },
     }),
-    KafkaModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [PrismaService],
