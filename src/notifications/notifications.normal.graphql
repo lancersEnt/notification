@@ -1,12 +1,7 @@
-extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.3",
-        import: ["@key", "@shareable"])
-
-directive @external on OBJECT | FIELD_DEFINITION
 
 scalar DateTime
 
-type Notification @key(fields: "id") {
+type Notification {
   id: ID!
   title: String!
   body: String!
@@ -48,4 +43,12 @@ type Mutation {
   createNotification(createNotificationInput: CreateNotificationInput!): Notification!
   updateNotification(id: String!, updateNotificationInput: UpdateNotificationInput!): Notification!
   removeNotification(id: String!): Notification
+}
+
+type NotificationCreatedResult {
+  notification: Notification
+}
+
+type Subscription {
+  notificationCreated(userId: String): NotificationCreatedResult
 }

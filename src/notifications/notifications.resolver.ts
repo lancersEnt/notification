@@ -1,6 +1,9 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
 import { NotificationsService } from './notifications.service';
 import { Prisma } from '@prisma/client';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
 
 @Resolver('Notification')
 export class NotificationsResolver {
@@ -36,5 +39,10 @@ export class NotificationsResolver {
   @Mutation('removeNotification')
   remove(@Args('id') id: string) {
     return this.notificationsService.remove({ id });
+  }
+
+  @Query('userNotifications')
+  userNotifications(@Args('userId') userId: string) {
+    return this.notificationsService.userNotifications(userId);
   }
 }

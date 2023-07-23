@@ -44,6 +44,8 @@ export abstract class IQuery {
     abstract notifications(): Nullable<Notification>[] | Promise<Nullable<Notification>[]>;
 
     abstract notification(id: string): Nullable<Notification> | Promise<Nullable<Notification>>;
+
+    abstract userNotifications(userId: string): Nullable<Notification>[] | Promise<Nullable<Notification>[]>;
 }
 
 export abstract class IMutation {
@@ -52,6 +54,14 @@ export abstract class IMutation {
     abstract updateNotification(id: string, updateNotificationInput: UpdateNotificationInput): Notification | Promise<Notification>;
 
     abstract removeNotification(id: string): Nullable<Notification> | Promise<Nullable<Notification>>;
+}
+
+export class NotificationCreatedResult {
+    notification?: Nullable<Notification>;
+}
+
+export abstract class ISubscription {
+    abstract notificationCreated(userId?: Nullable<string>): Nullable<NotificationCreatedResult> | Promise<Nullable<NotificationCreatedResult>>;
 }
 
 export type DateTime = any;

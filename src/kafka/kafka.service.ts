@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { log } from 'console';
 import { Kafka, Producer, logLevel } from 'kafkajs';
 import { NotificationsService } from 'src/notifications/notifications.service';
 
@@ -7,7 +8,7 @@ export class KafkaService {
   private kafka: Kafka;
   private producer: Producer;
 
-  constructor(private readonly notificationsService: NotificationsService) {
+  constructor(private readonly notificationService: NotificationsService) {
     this.kafka = new Kafka({
       clientId: 'MyKlad',
       brokers: ['localhost:9092'],
@@ -27,20 +28,23 @@ export class KafkaService {
   }
 
   async consume(topics: string[]): Promise<void> {
-    const consumer = this.kafka.consumer({ groupId: 'MK-notifications' });
+    const consumer = this.kafka.consumer({ groupId: 'MK-Notifications' });
 
     await consumer.connect();
     await Promise.all(topics.map((topic) => consumer.subscribe({ topic })));
 
     await consumer.run({
-      eachBatchAutoResolve: true,
       eachMessage: async ({ topic, partition, message, heartbeat }) => {
-        const payload = JSON.parse(message.value.toString()).payload;
-        this.notificationsService.create({
-          ...payload,
-          seen: false,
+        const payload = JSON.parse(message.value.toString());
+        log(payload);
+        this.notificationService.create({
+          title: payload.payload.title,
+          body: payload.payload.body,
+          createdBy: payload.payload.createdBy,
+          targetUserId: payload.payload.targetUserId,
         });
-        await heartbeat();
+        // log(...payload);
+        // this.notificationService.create({ ...payload });
       },
     });
   }

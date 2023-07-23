@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import {
+  ApolloDriver,
+  ApolloDriverConfig,
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
@@ -20,6 +22,20 @@ import { NotificationsModule } from './notifications/notifications.module';
       typePaths: ['./**/*.graphql'],
       resolvers: {
         DateTime: DateTimeResolver,
+      },
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      path: '/graphql',
+      typePaths: ['./**/*.normal.graphql'],
+      resolvers: {
+        DateTime: DateTimeResolver,
+      },
+      subscriptions: {
+        'graphql-ws': true,
+        'subscriptions-transport-ws': true,
       },
     }),
     NotificationsModule,
