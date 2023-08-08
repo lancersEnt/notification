@@ -6,10 +6,19 @@ directive @external on OBJECT | FIELD_DEFINITION
 
 scalar DateTime
 
+extend type User @key(fields: "id"){
+  id: ID! @external
+  notifications: [Notification]!
+}
+
+
 type Notification @key(fields: "id") {
   id: ID!
   title: String!
   body: String!
+  user: User
+  action:String!
+  targetUser: User
   targetUserId: String!
   createdBy: String!
   status: String!
@@ -21,6 +30,7 @@ type Notification @key(fields: "id") {
 input CreateNotificationInput {
   title: String!
   body: String!
+  action:String!
   targetUserId: String!
   createdBy: String!
   status: String
@@ -31,6 +41,7 @@ input CreateNotificationInput {
 input UpdateNotificationInput {
   title: String
   body: String
+  action: String
   targetUserId: String
   createdBy: String
   status: String
@@ -41,11 +52,14 @@ input UpdateNotificationInput {
 type Query {
   notifications: [Notification]!
   notification(id: String!): Notification
-  userNotifications(userId: String!): [Notification]!
+  userNotifications: [Notification]!
+  userUnseenNotificationsCount: Int!
+  userLatestNotifications: [Notification]!
 }
 
 type Mutation {
   createNotification(createNotificationInput: CreateNotificationInput!): Notification!
   updateNotification(id: String!, updateNotificationInput: UpdateNotificationInput!): Notification!
   removeNotification(id: String!): Notification
+  markAsSeen(id:String):Notification
 }

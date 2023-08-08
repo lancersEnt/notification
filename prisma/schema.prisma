@@ -16,6 +16,7 @@ model Notification {
   body                String
   targetUserId        String
   createdBy           String
+  action              String      @default("")
   status              String      @default("ACTIVE")
   seen                Boolean     @default(false)
   createdAt           DateTime    @default(now())

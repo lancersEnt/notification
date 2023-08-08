@@ -36,14 +36,13 @@ export class KafkaService {
     await consumer.run({
       eachMessage: async ({ topic, partition, message, heartbeat }) => {
         const payload = JSON.parse(message.value.toString());
-        log(payload);
         this.notificationService.create({
           title: payload.payload.title,
           body: payload.payload.body,
           createdBy: payload.payload.createdBy,
           targetUserId: payload.payload.targetUserId,
+          action: payload.payload.action,
         });
-        // log(...payload);
         // this.notificationService.create({ ...payload });
       },
     });

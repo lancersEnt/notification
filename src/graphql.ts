@@ -11,6 +11,7 @@
 export class CreateNotificationInput {
     title: string;
     body: string;
+    action: string;
     targetUserId: string;
     createdBy: string;
     status?: Nullable<string>;
@@ -21,6 +22,7 @@ export class CreateNotificationInput {
 export class UpdateNotificationInput {
     title?: Nullable<string>;
     body?: Nullable<string>;
+    action?: Nullable<string>;
     targetUserId?: Nullable<string>;
     createdBy?: Nullable<string>;
     status?: Nullable<string>;
@@ -28,10 +30,18 @@ export class UpdateNotificationInput {
     updatedAt?: Nullable<DateTime>;
 }
 
+export class User {
+    id: string;
+    notifications: Nullable<Notification>[];
+}
+
 export class Notification {
     id: string;
     title: string;
     body: string;
+    user?: Nullable<User>;
+    action: string;
+    targetUser?: Nullable<User>;
     targetUserId: string;
     createdBy: string;
     status: string;
@@ -45,7 +55,11 @@ export abstract class IQuery {
 
     abstract notification(id: string): Nullable<Notification> | Promise<Nullable<Notification>>;
 
-    abstract userNotifications(userId: string): Nullable<Notification>[] | Promise<Nullable<Notification>[]>;
+    abstract userNotifications(): Nullable<Notification>[] | Promise<Nullable<Notification>[]>;
+
+    abstract userUnseenNotificationsCount(): number | Promise<number>;
+
+    abstract userLatestNotifications(): Nullable<Notification>[] | Promise<Nullable<Notification>[]>;
 }
 
 export abstract class IMutation {
@@ -54,6 +68,8 @@ export abstract class IMutation {
     abstract updateNotification(id: string, updateNotificationInput: UpdateNotificationInput): Notification | Promise<Notification>;
 
     abstract removeNotification(id: string): Nullable<Notification> | Promise<Nullable<Notification>>;
+
+    abstract markAsSeen(id?: Nullable<string>): Nullable<Notification> | Promise<Nullable<Notification>>;
 }
 
 export class NotificationCreatedResult {

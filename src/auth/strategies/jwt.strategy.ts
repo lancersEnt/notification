@@ -5,7 +5,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { AuthenticationError } from '@nestjs/apollo';
 import { Request as RequestType } from 'express';
-import { log } from 'console';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
